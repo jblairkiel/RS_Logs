@@ -1,0 +1,78 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf370
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\f0\fs24 \cf0    /////////////////////////////|||||||||\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+  ///////////////////////LOADS_O'_STEAMY_LOGS\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+ ///////////////////////////BY: REAL_KIEL\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+/////////////////////////////////v.0.2\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+program Loads_O_Steamy_Logs;\
+\{$DEFINE SMART\}\
+\{$i srl/srl.simba\}\
+//------------------------------Constant_Variables------------------------------\\\\\
+const\
+  LoadsPerPlayer = 10;\
+  Treecolor =  0;\
+  WaitPerTree = 5000;\
+//------------------------Procedure_Declare_Players_FIXED------------------------\\\\\
+procedure DeclarePlayers;\
+Begin\
+  HowManyPlayers:=1; // this is the number of players to use\
+  NumberOfPlayers(HowManyPlayers);\
+  CurrentPlayer:=0; // player to start with\
+\
+  Players[0].Name := ''; //your username\
+  Players[0].Pass := ''; //your password\
+  Players[0].Nick := '';      //3-4 letters of username\
+  Players[0].Active := True;     //use this player?\
+end;\
+//-----------------------------Procedure_ChopTree-------------------------------\\\\\
+procedure ChopTree;\
+var\
+  x, y, MyMark : integer;\
+begin\
+  if not Loggedin then Exit;\
+  MarkTime(MyMark);\
+  repeat\
+    if FindObj(x, y, 'hop', TreeColor, 30) then\
+    begin\
+      Mouse(x, y, 0, 0, False);\
+      if ChooseOption('hop') then\
+      begin\
+        //increase 1 to the total tree chop - if we had one\
+        Wait(WaitPerTree);\
+        Exit; //We clicked chop, now we can exit this procedure.\
+      end;\
+    end;\
+    if TimeFromMark(MyMark) > (2 * 60 * 100) then\
+    begin\
+      Logout;\
+      Exit;\
+    end;\
+  until false\
+end;\
+//------------------------------Procedure_DropLogs------------------------------\\\\\
+procedure DropLogs;\
+var\
+i: integer;\
+begin\
+for i := 2 to 28 do\
+DropItem(i);\
+end;\
+//-----------------------------------Main_Loop----------------------------------\\\\\
+begin\
+  SetupSRL;\
+  DeclarePlayers;\
+  if Loggedin then Logout;\
+  LoginPlayer;\
+  repeat\
+    ChopTree;\
+    if InvFull then\
+      DropLogs;\
+  until false\
+end.\
+\
+\
+}
