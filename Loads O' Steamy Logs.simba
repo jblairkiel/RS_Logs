@@ -1,0 +1,57 @@
+program Loads_O_Steamy_Logs;
+{.include SRL/SLR.scar}
+
+const
+  LoadsPerPlayer = 10;
+  Treecolor =  ;
+begin
+  SetupSRL;
+procedure DeclarePlayer;
+begin
+SetupPlayer;
+  Players[0].Name := 'Barbarian Bb';
+  Players[0].Pass := 'chester2';
+  Players[0].Nick := 'Bar';
+  Players[0].Active := True;
+
+LoadPlayerArray;
+end;
+
+procedure ChopTree;
+var
+  x, y, MyMark : integer;
+begin
+  if not Loggedin then Exit;
+  MarkTime(MyMark);
+  repeat
+    if FindObj(x, y, 'hop', TreeColor, 30) then
+    begin
+      Mouse(x, y, 0, 0, False);
+      if ChooseOption('hop') then
+      begin
+        //increase 1 to the total tree chop - if we had one
+        Wait(WaitPerTree);
+        Exit; //We clicked chop, now we can exit this procedure.
+      end;
+    end;
+    if TimeFromMark(MyMark) > (2 * 60 * 100) then
+    begin
+      Logout;
+      Exit;
+    end;
+  until false
+end;
+
+begin
+  SetupSRL;
+  DeclarePlayer;
+  if Loggedin then Logout;
+  LoginPlayer;
+  repeat
+    ChopTree;
+    if InvFull then
+    begin
+      DropToPosition(2, 28);
+      Inc(Players[CurrentPlayer].Banked);
+  until false
+end.
